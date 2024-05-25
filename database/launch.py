@@ -1,24 +1,18 @@
-# PGPASSWORD=root psql -h localhost -p 5432 -U root -d postgres < dump.sql
-
 from sys import argv
 from dotenv import load_dotenv
 import os
 
-USERNAME = "root"
-PASSWORD = "root"
-IMAGE_NAME = "demo_db_image"
-CONTAINER_NAME = "demo_db_container"
-PORT = "5432"
-DUMP_SIZE = "small"
+if os.path.exists("container.env") == False:
+    raise Exception("File ""container.env"" does not exists")
 
-if os.path.exists("container.env"):
-    print("Loading environment variable from ""container.env""\n")
-    load_dotenv("container.env")
-    USERNAME = os.getenv("DMBS_USERNAME")
-    PASSWORD = os.getenv("DMBS_PASSWORD")
-    IMAGE_NAME = os.getenv("IMAGE_NAME")
-    CONTAINER_NAME = os.getenv("CONTAINER_NAME")
-    PORT = os.getenv("PORT")
+print("Loading environment variable from ""container.env""\n")
+load_dotenv("container.env")
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
+IMAGE_NAME = os.getenv("IMAGE_NAME")
+CONTAINER_NAME = os.getenv("CONTAINER_NAME")
+PORT = os.getenv("PORT")
+DUMP_SIZE = os.getenv("DUMP_SIZE")
 
 os.system("python ./dump/installer.py " + DUMP_SIZE + " ./dump_installer.env")
 
