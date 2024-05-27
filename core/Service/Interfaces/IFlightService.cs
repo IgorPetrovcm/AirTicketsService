@@ -1,3 +1,4 @@
+using Domain.DTO;
 using Domain.Entity;
 
 namespace Service.Interfaces
@@ -8,6 +9,6 @@ namespace Service.Interfaces
         Task<IEnumerable<Seat>> GetAvailableSeatsAsync(int flightId);
         Task<IEnumerable<Flight>> GetByDepartureDateAsync(DateOnly dateTime);
         Task<IEnumerable<Ticket>> GetTicketsAsync(int flightId);
-        Task<string> CreateBooking();
+        Task<List<string>> CreateBooking(CreateBookingDto bookingDto);
     }
 }
