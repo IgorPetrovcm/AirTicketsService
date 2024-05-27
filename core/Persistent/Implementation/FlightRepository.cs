@@ -1,27 +1,23 @@
-using Domain.Entity;
-using Persistent.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using Npgsql;
 using Dapper;
-using System.Reflection;
-using System.ComponentModel;
+using Persistent.Interfaces;
+using Domain.Entity;
 
 namespace Persistent.Implementation
 {
     public class FlightRepository : IFlightRepository
     {
-        private readonly string connectoinString;
-        private readonly KeyGenerator keyGen;
+        private readonly string connectionString;
         public FlightRepository(IConfiguration configuration) 
         {
             CustomMapper.SetMapping();
-            this.connectoinString = configuration["ConnectionStrings:Default"];
-            keyGen = new KeyGenerator(connectoinString);
+            this.connectionString = configuration["ConnectionStrings:Default"];
         } 
         public async Task<IEnumerable<Flight>> GetAllAsync()
         {
-            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            using(IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 return await connection.QueryAsync<Flight>("SELECT * FROM bookings.flights LIMIT 10");
             }
@@ -29,7 +25,7 @@ namespace Persistent.Implementation
 
         public async Task<IEnumerable<Seat>> GetAvailableSeatsAsync(int flightId)
         {
-            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            using(IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 return await connection
                     .QueryAsync<Seat>(@"select s.*  from  bookings.flights f 
@@ -42,7 +38,7 @@ namespace Persistent.Implementation
 
         public async Task<IEnumerable<Flight>> GetByDepartureDateAsync(DateOnly date)
         {
-            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            using(IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 var dateTime = date.ToDateTime(TimeOnly.MinValue); 
                 return await connection.QueryAsync<Flight>(@"
@@ -54,7 +50,7 @@ namespace Persistent.Implementation
 
         public async Task<IEnumerable<Ticket>> GetTicketsAsync(int flightId)
         {
-            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            using(IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 return await connection
                     .QueryAsync<Ticket>(@"SELECT t.*
@@ -63,18 +59,6 @@ namespace Persistent.Implementation
                                         WHERE tf.flight_id = @FlightId;
                                     ", new {FlightId = flightId});
             }
-        }
-        public async Task<string> CreateBooking(DateTime dateCreated)
-        {
-            string newPk = await keyGen.GetNextPrimaryKeyAsync();
-            
-            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
-            {
-                await connection.ExecuteAsync(@"insert into bookings.bookings values(@Key, @Date, 0)"
-                                            , new {Key = newPk, Date = dateCreated});
-            }
-
-            return newPk;
         }
     }
 }
