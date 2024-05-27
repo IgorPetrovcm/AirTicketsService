@@ -17,6 +17,7 @@ namespace Domain.Entity
       [Description("passenger_name")]
       public string PassengerName { get; set; }
 
+      // TODO: may be using another type, because this field is json 
       [Description("contact_data")]
       public string ContactData { get; set; }
   }
