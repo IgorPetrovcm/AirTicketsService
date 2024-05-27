@@ -12,16 +12,12 @@ namespace Persistent.Implementation
     public class FlightRepository : IFlightRepository
     {
         private readonly string connectoinString;
+        private readonly KeyGenerator keyGen;
         public FlightRepository(IConfiguration configuration) 
         {
+            CustomMapper.SetMapping();
             this.connectoinString = configuration["ConnectionStrings:Default"];
-
-            var Flmap = new CustomPropertyTypeMap(typeof(Flight), (type, columnName)
-                => type.GetProperties().FirstOrDefault(prop => GetDescriptionFromAttribute(prop) == columnName.ToLower()));
-            SqlMapper.SetTypeMap(typeof(Flight), Flmap);
-            var Stmap = new CustomPropertyTypeMap(typeof(Seat), (type, columnName)
-                => type.GetProperties().FirstOrDefault(prop => GetDescriptionFromAttribute(prop) == columnName.ToLower()));
-            SqlMapper.SetTypeMap(typeof(Seat), Stmap);
+            keyGen = new KeyGenerator(connectoinString);
         } 
         public async Task<IEnumerable<Flight>> GetAllAsync()
         {
@@ -44,12 +40,41 @@ namespace Persistent.Implementation
             }
         }
 
-        static string GetDescriptionFromAttribute(MemberInfo member)
+        public async Task<IEnumerable<Flight>> GetByDepartureDateAsync(DateOnly date)
         {
-            if (member == null) return null;
+            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            {
+                var dateTime = date.ToDateTime(TimeOnly.MinValue); 
+                return await connection.QueryAsync<Flight>(@"
+                    select * from bookings.flights f 
+                    where f.scheduled_departure::date = @Date
+                ", new { Date = dateTime });
+            }
+        }
 
-            var attrib = (DescriptionAttribute)Attribute.GetCustomAttribute(member, typeof(DescriptionAttribute), false);
-            return (attrib?.Description ?? member.Name).ToLower();
+        public async Task<IEnumerable<Ticket>> GetTicketsAsync(int flightId)
+        {
+            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            {
+                return await connection
+                    .QueryAsync<Ticket>(@"SELECT t.*
+                                        FROM bookings.tickets t
+                                        JOIN bookings.ticket_flights tf ON t.ticket_no = tf.ticket_no
+                                        WHERE tf.flight_id = @FlightId;
+                                    ", new {FlightId = flightId});
+            }
+        }
+        public async Task<string> CreateBooking(DateTime dateCreated)
+        {
+            string newPk = await keyGen.GetNextPrimaryKeyAsync();
+            
+            using(IDbConnection connection = new NpgsqlConnection(connectoinString))
+            {
+                await connection.ExecuteAsync(@"insert into bookings.bookings values(@Key, @Date, 0)"
+                                            , new {Key = newPk, Date = dateCreated});
+            }
+
+            return newPk;
         }
     }
 }
