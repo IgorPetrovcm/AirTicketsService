@@ -1,3 +1,4 @@
+using Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
@@ -13,9 +14,9 @@ namespace API.Controllers
             this.flightService = service;
         }
         [HttpPost]
-        public async Task<IActionResult> Create() 
+        public async Task<IActionResult> Create([FromBody] CreateBookingDto bookingDto) 
         {
-            return Ok(await flightService.CreateBooking());
+            return Ok(await flightService.CreateBooking(bookingDto));
         }
     }
 }
