@@ -1,4 +1,3 @@
-using Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
@@ -13,10 +12,16 @@ namespace API.Controllers
         {
             this.flightService = service;
         }
-        [HttpGet("/")]
+        [HttpGet]
         public async Task<IActionResult> Get() 
         {
             return Ok(await flightService.GetAllAsync());
+        }
+
+        [HttpGet("{departureDate}")]
+        public async Task<IActionResult> GetByDepartureDate(DateOnly departureDate)
+        {
+            return Ok(await flightService.GetByDepartureDateAsync(departureDate));
         }
     }
 }

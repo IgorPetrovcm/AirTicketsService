@@ -5,17 +5,17 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SeatController : ControllerBase
+    public class TicketController : ControllerBase
     {
         private readonly IFlightService flightService; 
-        public SeatController(IFlightService service) 
+        public TicketController(IFlightService service) 
         {
             this.flightService = service;
         }
-        [HttpGet("available/{flightId}")]
+        [HttpGet("{flightId}")]
         public async Task<IActionResult> Get(int flightId) 
         {
-            return Ok(await flightService.GetAvailableSeatsAsync(flightId));
+            return Ok(await flightService.GetTicketsAsync(flightId));
         }
     }
 }
