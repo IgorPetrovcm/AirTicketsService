@@ -4,6 +4,7 @@ using Npgsql;
 using Dapper;
 using Persistent.Interfaces;
 using Domain.Entity;
+using Domain.DTO;
 
 namespace Persistent.Implementation
 {
@@ -36,15 +37,15 @@ namespace Persistent.Implementation
             }
         }
 
-        public async Task<IEnumerable<Flight>> GetByDepartureDateAsync(DateOnly date)
+        public async Task<IEnumerable<Flight>> GetByDateAndAirportsAsync(ChoosingFlightDto choosingFlight)
         {
             using(IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                var dateTime = date.ToDateTime(TimeOnly.MinValue); 
+                var dateTime = choosingFlight.ScheduledDeparture.ToDateTime(TimeOnly.MinValue); 
                 return await connection.QueryAsync<Flight>(@"
                     select * from bookings.flights f 
-                    where f.scheduled_departure::date = @Date
-                ", new { Date = dateTime });
+                    where f.scheduled_departure::date = @Date and f.departure_airport = @DepartureAirport and f.arrival_airport = @ArrivalAirport
+                ", new { Date = dateTime, choosingFlight.DepartureAirport, choosingFlight.ArrivalAirport });
             }
         }
 

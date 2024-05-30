@@ -46,9 +46,9 @@ namespace Service.Implementation
             return await flightRepository.GetAvailableSeatsAsync(flightId);
         }
 
-        public async Task<IEnumerable<Flight>> GetByDepartureDateAsync(DateOnly date)
+        public async Task<IEnumerable<Flight>> GetByDepartureDateAsync(ChoosingFlightDto choosingFlight)
         {
-            return await flightRepository.GetByDepartureDateAsync(date);
+            return await flightRepository.GetByDateAndAirportsAsync(choosingFlight);
         }
 
         public async Task<IEnumerable<Ticket>> GetTicketsAsync(int flightId)

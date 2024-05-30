@@ -1,3 +1,4 @@
+using Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
@@ -18,10 +19,10 @@ namespace API.Controllers
             return Ok(await flightService.GetAllAsync());
         }
 
-        [HttpGet("{departureDate}")]
-        public async Task<IActionResult> GetByDepartureDate(DateOnly departureDate)
+        [HttpGet("choosing")]
+        public async Task<IActionResult> GetByDepartureDate([FromQuery] ChoosingFlightDto choosingFlight)
         {
-            return Ok(await flightService.GetByDepartureDateAsync(departureDate));
+            return Ok(await flightService.GetByDepartureDateAsync(choosingFlight));
         }
     }
 }

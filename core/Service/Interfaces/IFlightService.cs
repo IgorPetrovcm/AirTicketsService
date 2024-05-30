@@ -7,7 +7,7 @@ namespace Service.Interfaces
     {
         Task<IEnumerable<Flight>> GetAllAsync();        
         Task<IEnumerable<Seat>> GetAvailableSeatsAsync(int flightId);
-        Task<IEnumerable<Flight>> GetByDepartureDateAsync(DateOnly dateTime);
+        Task<IEnumerable<Flight>> GetByDepartureDateAsync(ChoosingFlightDto choosingFlight);
         Task<IEnumerable<Ticket>> GetTicketsAsync(int flightId);
         Task<List<string>> CreateBooking(CreateBookingDto bookingDto);
     }

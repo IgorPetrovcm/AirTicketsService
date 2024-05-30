@@ -1,0 +1,51 @@
+<div>
+
+    <div>
+        <form [formGroup]="flightForm">
+            <mat-form-field>
+              <mat-label>Аэропорт вылета</mat-label>
+              <input matInput formControlName="departureAirport">
+            </mat-form-field>
+        
+            <mat-form-field>
+              <mat-label>Аэропорт прилета</mat-label>
+              <input matInput formControlName="arrivalAirport">
+            </mat-form-field>
+        
+            <mat-form-field>
+              <mat-label>Выберете дату вылета</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="scheduledDeparture">
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        
+            <button mat-flat-button color="primary" (click)="getFlight()">
+              Посмотреть
+            </button>
+          </form>
+    </div>
+
+    <div>
+      <table mat-table [dataSource]="flights">
+        @for (column of displayedColumns; track $index) {
+          <ng-container [matColumnDef]="column" *ngIf="column !== 'act'">
+            <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>
+          </ng-container>
+        }
+  
+        <ng-container matColumnDef="act">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-flat-button color="primary">
+              Билеты
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+</div>
