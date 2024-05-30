@@ -16,12 +16,12 @@ export class FlightService {
  
     let formattedDate : string = this.formatDate(flightParameters.scheduledDeparture)
 
-    const requestBody = {
+    const requestParams = {
       ...flightParameters,
       scheduledDeparture: formattedDate
     };
 
-    return this.restService.restGET<Flight[]>(`/api/Flight/choosing`,{...requestBody}
+    return this.restService.restGET<Flight[]>(`/api/Flight/choosing`,{...requestParams}
     )
       .pipe(
         catchError(err => {
@@ -31,7 +31,8 @@ export class FlightService {
   }
 
   public getSeats(flightId : number) {
-    return this.restService.restGET<Seat[]>(`api/Seat/available/${flightId}`
+    console.log(`api/Seat/available/${flightId}`)
+    return this.restService.restGET<Seat[]>(`/api/Seat/available/${flightId}`
     )
       .pipe(
         catchError(err => {

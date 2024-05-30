@@ -30,12 +30,18 @@ export class SeatsPageComponent {
       this.flightId = +params['flightId']; 
     });
 
+    console.log(this.flightId)
+
     if (this.flightId != null) {
-      this.flightService.getSeats(this.flightId)
-      .subscribe((data : Seat[]) => {
-        this.seats = [...data]
-        console.log(this.seats)
-      })
+      this.flightService.getSeats(this.flightId).subscribe(
+        (data: Seat[]) => {
+          this.seats = [...data];
+          console.log(this.seats);
+        },
+        (error) => {
+          console.error('Error fetching seats:', error);
+        }
+      );
     }
   }
 }

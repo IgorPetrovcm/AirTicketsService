@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 
 
 
@@ -30,7 +31,7 @@ export class FlightsPageComponent {
 
   flightForm: FormGroup;
 
-  constructor(private flightService: FlightService, private fb: FormBuilder) {
+  constructor(private flightService: FlightService, private fb: FormBuilder,  private router: Router) {
     this.flightForm = this.fb.group({
       departureAirport: [''],
       arrivalAirport: [''],
@@ -50,5 +51,11 @@ export class FlightsPageComponent {
     .subscribe((data : Flight[]) => {
        this.flights = [...data];
     })
+  }
+
+  showSeats(flightId: number) {
+    if (flightId) {
+      this.router.navigate(['/seats', flightId]);
+    }
   }
 }
