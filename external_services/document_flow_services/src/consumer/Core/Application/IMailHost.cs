@@ -6,6 +6,6 @@ public interface IMailHost
 {
     void SendMessage(string message, string destination);
 
-    Task SendMessageAsync(string message, string destination);
+    void SendMessageAsync(string message, string destination);
 
 }

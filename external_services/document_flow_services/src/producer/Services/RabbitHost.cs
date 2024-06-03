@@ -10,14 +10,14 @@ public class RabbitHost : IRabbitHost
 
     private readonly IModel _channel; 
 
-    public RabbitHost(string host, string username, string password, int port)
+    public RabbitHost(IConfiguration config)
     {
         ConnectionFactory factory = new ConnectionFactory(){
-            HostName = host,
-            Port = port,
-            UserName = username,
-            Password = password
-        };
+            HostName = "localhost",
+            Port = config.GetValue<int>("DATABUS_PORT"),
+            UserName = config.GetValue<string>("DATABUS_USERNAME"),
+            Password = config.GetValue<string>("DATABUS_PASSWORD")
+        }; 
 
         IConnection connection = factory.CreateConnection();
 

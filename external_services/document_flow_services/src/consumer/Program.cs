@@ -36,10 +36,11 @@ builder.Services.AddTransient<IRSAWorker, RSAWorker>(
 
 builder.Services.AddTransient<ServiceMailMessageBuilder>();
 
-builder.Services.AddScoped<FileGenerator>();
+builder.Services.AddTransient<FileGenerator>();
 
-builder.Services.AddScoped<IMailHost, MailHost>();
+builder.Services.AddTransient<IMailHost, MailHost>();
 
+builder.Services.AddHostedService<DataBusConsumer>();
 
 var app = builder.Build();
 

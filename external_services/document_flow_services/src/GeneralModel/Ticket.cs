@@ -1,4 +1,4 @@
-namespace Producer.Core.Model;
+namespace DocumentFlowService.GeneralModel;
 
 
 public class Ticket

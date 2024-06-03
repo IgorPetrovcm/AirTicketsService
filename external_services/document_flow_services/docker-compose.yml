@@ -1,0 +1,18 @@
+version: "3.8"
+
+services: 
+
+  data_bus:
+    build: ./data_bus/
+
+    env_file:
+      - path: ./.env
+        required: true
+
+    environment:
+      - RABBITMQ_DEFAULT_USER=${DATABUS_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${DATABUS_PASSWORD}
+
+    ports:
+      - ${DATABUS_MANAGEMENT_PORT}:15672
+      - ${DATABUS_PORT}:5672

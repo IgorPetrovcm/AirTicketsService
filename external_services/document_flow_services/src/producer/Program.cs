@@ -12,14 +12,7 @@ builder.Services.AddControllers()
         );
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IRabbitHost, RabbitHost>( (services) =>
-    new RabbitHost(
-            host: "localhost",
-            username: Environment.GetEnvironmentVariable("DATABUS_USERNAME"),
-            password: Environment.GetEnvironmentVariable("DATABUS_PASSWORD"),
-            port: 5672 
-        )
-);
+builder.Services.AddScoped<IRabbitHost, RabbitHost>();
 
 builder.Services.AddScoped<IMessageSendingWorker, MessageSendingWorker>();
 

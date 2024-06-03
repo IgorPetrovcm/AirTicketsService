@@ -1,6 +1,6 @@
-namespace Producer.Core.Application;
+namespace DocumentFlowService.GeneralModel.DTOs;
 
-using Producer.Core.Model;
+using DocumentFlowService.GeneralModel;
 
 public class TicketRequestDTO 
 {

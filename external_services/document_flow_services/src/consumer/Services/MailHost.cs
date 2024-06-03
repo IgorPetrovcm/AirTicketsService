@@ -40,22 +40,6 @@ public class MailHost : IMailHost
         _fileGenerator = fileGenerator;
 
         client = new SmtpClient("smtp.mail.ru", 587);
-
-        // string? encryptPassword = mailOption.Value.Password;
-        
-        // if (encryptPassword == null || encryptPassword.Trim() == ""){
-        //     throw new ArgumentNullException("Encrypted password is null");
-        // }
-
-        // byte[] encryptPasswordBytes = Convert.FromBase64String(encryptPassword);
-
-        // using RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048);
-
-        // rsa.ImportFromPem( File.ReadAllText(fileWithPrivateKey.FullName) );
-
-        // _mail.Password = Encoding.UTF8.GetString( rsa.Decrypt( encryptPasswordBytes, true) );
-
-        // _mail.Address = mailOption.Value.Address;
     }
 
     object blocking;
@@ -70,6 +54,7 @@ public class MailHost : IMailHost
 
         ContentType type = new ContentType( MediaTypeNames.Application.Pdf );
         Stream stream = _fileGenerator.GeneratePdf( message );
+
     
         _messageBuilder.Attach( stream, type, "Ticket.pdf");
         try 
@@ -86,8 +71,8 @@ public class MailHost : IMailHost
 
     }
 
-    public Task SendMessageAsync(string message, string destination)
+    public void SendMessageAsync(string message, string destination)
     {
-        return new Task(() => SendMessage( message, destination));
+        Task.Run( () => SendMessage(message, destination) );
     }
 }

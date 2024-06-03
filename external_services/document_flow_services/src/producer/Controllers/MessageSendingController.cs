@@ -2,6 +2,7 @@ namespace Producer.Controllers;
 
 using Producer.Core.Application;
 using Microsoft.AspNetCore.Mvc;
+using DocumentFlowService.GeneralModel.DTOs;
 
 [ApiController]
 [Route("[controller]")]
